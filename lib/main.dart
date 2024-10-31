@@ -6,57 +6,69 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        primaryColor: Colors.blue,
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isLoading = false;
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 700),
-          child: isLoading ? const CircularProgressIndicator() : const Text("No Available Data"),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            isLoading = !isLoading;
+          });
+        },
+      ),
+      appBar: AppBar(
+        title: Text("#1- Animated switcher"),
+      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: isLoading
+            ? Container(
+                height: MediaQuery.sizeOf(context).height,
+                width: MediaQuery.sizeOf(context).width,
+                color: Theme.of(context).primaryColor,
+                child: const CircularProgressIndicator.adaptive(
+                  backgroundColor: Colors.white,
+                ),
+              )
+            : loadedItems(context),
       ),
     );
   }
 
   Widget loadedItems(BuildContext context) {
     return ListView.builder(
-      itemBuilder: (c, i) {},
+      itemCount: 10,
+      itemBuilder: (c, i) {
+        return ListTile(
+          title: Text("Title $i"),
+          subtitle: Text("This is the initial description $i"),
+          leading: const CircleAvatar(),
+        );
+      },
     );
   }
 }
